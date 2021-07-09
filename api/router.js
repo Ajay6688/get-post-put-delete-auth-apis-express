@@ -2,13 +2,13 @@ const { createUser, userLogin, getUsersData, updateUser, delUser, forgotPassword
 const router = require("express").Router();
 const { checkToken } = require("../authorization/token_validation");
 
-router.post("/api/register", createUser);
-router.post("/api/login", userLogin);
-router.get("/api/getusers", checkToken, getUsersData);
-router.patch("/api/update", checkToken, updateUser);
-router.delete("/api/delete", checkToken, delUser);
-router.patch('/api/forgot-password', forgotPassword);
-router.post('/api/check-otp', checkOtp);
-router.patch('/api/reset-password', resetPassword);
+router.post("/register", createUser);
+router.post("/login", userLogin);
+router.get("/getusers", checkToken, getUsersData);
+router.patch("/update", checkToken, updateUser);
+router.delete("/delete", checkToken, delUser);
+router.patch('/forgot-password', forgotPassword);
+router.post('/check-otp', checkOtp);
+router.patch('/reset-password', resetPassword);
 
 module.exports = { router };

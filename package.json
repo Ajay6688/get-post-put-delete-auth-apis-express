@@ -4,7 +4,7 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "npx cross-env NODE_ENV=server nodemon app.js",
         "start": "nodemon app.js"
     },
     "author": "Ajay",
@@ -23,6 +23,7 @@
         "twilio": "3.65.0"
     },
     "devDependencies": {
+        "cross-env": "^7.0.3",
         "nodemon": "^2.0.7"
     }
 }

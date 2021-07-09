@@ -12,4 +12,4 @@ app.get('/', (req, res) => {
     res.status(200).send("Hello");
 });
 
-app.listen(process.env.PORT || config.get("ports.port"), () => console.log("Server is listening at port ", process.env.PORT || config.get('ports.port')));
+app.listen(config.get("ports.port"), () => console.log("Server is listening at port ", config.get('ports.port')));
