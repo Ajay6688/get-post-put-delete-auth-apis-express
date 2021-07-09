@@ -1,0 +1,19 @@
+{
+    "dbconfig": {
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "database": "users"
+    },
+    "jwt": {
+        "secretkey": "TopSecretKey"
+    },
+    "ports": {
+        "port": "3000"
+    },
+    "twilio": {
+        "TWILIO_ACCOUNT_SID": "AC42b5e7fb302359724cdd6e3dc43a911e",
+        "TWILIO_AUTH_TOKEN": "b72971bf0da4bdf8681dc5481d7c281d"
+
+    }
+}
