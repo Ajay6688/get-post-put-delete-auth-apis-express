@@ -37,7 +37,7 @@ function getUsers() {
 
 function update(data, callback) {
     return new Promise((resolve, reject) => {
-        conn.query("update registrations set name=? , email=? , password=? where id = ?", [data.name, data.email, data.password, data.id],
+        conn.query("update registrations set name=? , email=? ,phoneNumber=? ,password=? where id = ?", [data.name, data.email, data.phoneNumber, data.password, data.id],
             (error, results) => {
                 if (error) {
                     return reject(error);
