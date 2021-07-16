@@ -48,7 +48,7 @@ function update(data, callback) {
 }
 
 function deleteUser(data, callback) {
-    return new Promise((reject, resolve) => {
+    return new Promise((resolve, reject) => {
         conn.query("delete from registrations where id = ? ", [data.id],
             (error, results) => {
                 if (error) {
@@ -82,7 +82,7 @@ function check_otp(data) {
 }
 
 function resetPass(data) {
-    return new Promise((resolve, response) => {
+    return new Promise((resolve, reject) => {
         conn.query("update registrations set password = ? , otp = ? where phoneNumber= ?", [data.newPassword, null, data.phoneNumber], (error, results) => {
             if (error) {
                 return reject(error);

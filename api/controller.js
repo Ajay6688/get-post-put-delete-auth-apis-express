@@ -10,18 +10,24 @@ async function createUser(req, res) {
         let body = req.body;
         const joiresult = await registerSchema.validate(body);
         if (joiresult.error) {
-            return res.status(400).send(joiresult.error.details[0].message);
+            return res.status(400).send({
+                "status": 400,
+                "error": joiresult.error.details[0].message
+            });
         }
         body.password = await bcrypt.hash(body.password, 10);
         let createResponse = await create(body);
         let response = req.body;
         delete response.password;
         return res.status(200).send({
-            ...response,
-            id: createResponse.insertId
+            "status": 200,
+            "message": "Registration Successfull",
+            "data": {
+                ...response,
+                id: createResponse.insertId
+            }
         });
     } catch (error) {
-        // console.log("you are in catch block");
         res.status(400).send(error);
     }
 }
@@ -31,12 +37,18 @@ async function userLogin(req, res) {
         const body = req.body;
         const joiresult = await loginSchema.validate(body);
         if (joiresult.error) {
-            return res.status(400).send(joiresult.error.details[0].message);
+            return res.status(400).send({
+                "status": 400,
+                "error": joiresult.error.details[0].message
+            });
         }
         let createResponse = await login(body.email)
         const result = await bcrypt.compare(body.password, createResponse.password);
         if (result == false) {
-            res.status(400).send("incorrect password");
+            res.status(400).send({
+                "status": 400,
+                "error": "incorrect password"
+            });
         }
         if (result) {
             createResponse.password = undefined;
@@ -44,12 +56,15 @@ async function userLogin(req, res) {
                 expiresIn: "2h"
             });
             return res.status(200).send({
-                "message": "you have logged successfuly",
+                "status": 200,
+                "message": "You have logged in successfuly",
                 "token": jsontoken
             });
         }
     } catch (error) {
-        res.status(400).send("Invalid Email or Password");
+        res.status(400).send({
+            "error": "Invalid Email or Password"
+        });
     }
 }
 
@@ -59,11 +74,18 @@ async function updateUser(req, res) {
         const body = req.body;
         const joiresult = await updateSchema.validate(body);
         if (joiresult.error) {
-            return res.status(400).send(joiresult.error.details[0].message);
+            return res.status(400).send({
+                "status": 400,
+                "error": joiresult.error.details[0].message
+            });
         }
         body.password = await bcrypt.hash(body.password, 10);
         let createResponse = await update(body)
-        return res.status(200).send(createResponse);
+        return res.status(200).send({
+            "status": 200,
+            "message": "Successfully Updated",
+            "data": createResponse
+        });
     } catch (error) {
         res.status(400).send(error);
     }
@@ -83,10 +105,17 @@ async function delUser(req, res) {
         const body = req.body;
         const joiresult = await delSchema.validate(body);
         if (joiresult.error) {
-            res.status(400).send(joiresult.error.details[0].message);
+            res.status(400).send({
+                "status": 400,
+                "error": joiresult.error.details[0].message
+            });
         }
-        let createResponse = await deleteUser(body)
-        return res.status(200).send(createResponse);
+        let createResponse = await deleteUser(body);
+        return res.status(200).send({
+            "status": 200,
+            "message": "Successfully Deleted",
+            "data": createResponse
+        });
     } catch (error) {
         res.status(400).send(error);
     }
@@ -98,15 +127,25 @@ async function forgotPassword(req, res) {
 
         const joiresult = await forgotPassSchema.validate(body);
         if (joiresult.error) {
-            return res.status(400).send(joiresult.error.details[0].message);
+            return res.status(400).send({
+                "status": 400,
+                "error": joiresult.error.details[0].message
+            });
         }
         let createResponse = await verifyNumber(body.phoneNumber);
 
         if (createResponse[0]) {
             let results = await sendOtp(body.phoneNumber);
-            res.status(200).send(results);
+            return res.status(200).send({
+                "status": 200,
+                "message": "Otp sent successfully on your registered phone number",
+                "data": results
+            });
         } else {
-            res.status(400).send("Phone number is not registered")
+            return res.status(400).send({
+                "status": 400,
+                "error": "Phone number is not registered"
+            })
         }
     } catch (error) {
         return res.status(400).send(error);
@@ -118,13 +157,25 @@ async function checkOtp(req, res) {
         const body = req.body;
         const joiresult = await otpCheckSchema.validate(body);
         if (joiresult.error) {
-            return res.status(400).send(joiresult.error.details[0].message);
+            return res.status(400).send({
+                "status": 400,
+                "error": joiresult.error.details[0].message
+            });
         }
         let createResponse = await check_otp(body);
         if (body.otp == createResponse.otp) {
-            return res.status(200).send("otp matched");
+            delete createResponse.password;
+            delete createResponse.otp;
+            return res.status(200).send({
+                "status": 200,
+                "message": "otp matched successfully",
+                "data": createResponse
+            });
         } else {
-            return res.status(400).send("wrong otp");
+            return res.status(400).send({
+                "status": 400,
+                "error": "wrong otp"
+            });
         }
     } catch (error) {
         return res.status(400).send(error);
@@ -136,11 +187,18 @@ async function resetPassword(req, res) {
         const body = req.body;
         const joiresult = await resetPassSchema.validate(body);
         if (joiresult.error) {
-            return res.status(400).send(joiresult.error.details[0].message);
+            return res.status(400).send({
+                "status": 400,
+                "error": joiresult.error.details[0].message
+            });
         }
         body.newPassword = await bcrypt.hash(body.newPassword, 10);
         let createResponse = await resetPass(body);
-        return res.status(200).send(createResponse);
+        return res.status(200).send({
+            "status": 200,
+            "message": "password updated successfully",
+            "data": createResponse
+        });
     } catch (error) {
         return res.status(400).send(error);
     }
